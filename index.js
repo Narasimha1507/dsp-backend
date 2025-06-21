@@ -11,8 +11,20 @@ const app = express();
 const MONGO_URI = process.env.MONGO_URI;
 
 // Middleware
+const allowedOrigins = [
+  'https://docshareplatform.netlify.app',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: 'https://docshareplatform.netlify.app',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
