@@ -19,6 +19,15 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/files', fileRoutes); // Includes upload, fetch, delete, serve
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy',
+    "default-src 'self'; " +
+    "font-src 'self' https://dsp-backend-njek.onrender.com; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "script-src 'self' https://docshareplatform.netlify.app;"
+  );
+  next();
+});
 // MongoDB connection
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
